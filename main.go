@@ -7,8 +7,10 @@ package main
 // Imports
 //
 import (
+	"bytes"
 	"flag"
 	"fmt"
+	"os/exec"
 	"strings"
 	"time"
 )
@@ -102,4 +104,62 @@ func main() {
 
 	// everything worked fine, so return null
 	return
+}
+
+//! Attempt to execute the lsblk command.
+/*
+ *  @param    ...string    list of arguments
+ *
+ *  @return   bytes[]      array of byte buffer data
+ */
+func lsblk() (bytes.Buffer, error) {
+
+	// variable declaration
+	var output bytes.Buffer
+
+	// assemble the command from the list of string arguments
+	cmd := exec.Command("lsblk")
+	cmd.Stdout = &output
+	cmd.Stderr = &output
+
+	// attempt to execute the command
+	err := cmd.Run()
+
+	// if an error occurred, go ahead and pass it back
+	if err != nil {
+		return output, err
+	}
+
+	// having ran the command, pass back the result if no error has
+	// occurred
+	return output, nil
+}
+
+//! Attempt to execute the mount command.
+/*
+ *  @param    ...string    list of arguments
+ *
+ *  @return   bytes[]      array of byte buffer data
+ */
+func mount(args ...string) (bytes.Buffer, error) {
+
+	// variable declaration
+	var output bytes.Buffer
+
+	// assemble the command from the list of string arguments
+	cmd := exec.Command("mount", args...)
+	cmd.Stdout = &output
+	cmd.Stderr = &output
+
+	// attempt to execute the command
+	err := cmd.Run()
+
+	// if an error occurred, go ahead and pass it back
+	if err != nil {
+		return output, err
+	}
+
+	// having ran the command, pass back the result if no error has
+	// occurred
+	return output, nil
 }
