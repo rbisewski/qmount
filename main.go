@@ -133,7 +133,7 @@ func main() {
 			continue
 		}
 
-		device = columns[0]
+		rawDevice := columns[0]
 		majmin = columns[1]
 		rm = columns[2]
 		size = columns[3]
@@ -158,13 +158,23 @@ func main() {
 			continue
 		}
 
-		// check if the device in question is present; if it isn't then
-		// exit and print a helpful end message
+		reASCII := regexp.MustCompile("([a-zA-Z0-9]+)")
+		matches := reASCII.FindAllString(rawDevice, -1)
 
-		// TODO: this is for debugging, delete it eventually
-		fmt.Println(device, majmin, rm, size, ro, Type, mountPoint)
+		if len(matches) == 0 {
+			continue
+		}
+
+		device = matches[0]
+
+		// check if the device in question is present ...
+		if device == finalPiece {
+			deviceWasNotFound = false
+			break
+		}
 	}
 
+	// ... if it was not found, exit and print a helpful end message
 	if deviceWasNotFound {
 		fmt.Println("Error: the following is device is not found...",
 			deviceToMount)
@@ -172,7 +182,8 @@ func main() {
 	}
 
 	// TODO: complete the below pseudo code
-	datetime = datetime
+	fmt.Println(device, majmin, rm, size, ro, Type, mountPoint,
+		datetime)
 
 	// since the device is a unmounted partition, then attempt to make
 	// a directory that combines its size and a timestamp
