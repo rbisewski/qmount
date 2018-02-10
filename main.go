@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -67,6 +68,20 @@ func main() {
 		return
 	}
 
+	// obtain the last portion of the device
+	pieces := strings.Split(deviceToMount, "/")
+	if len(pieces) == 0 {
+		fmt.Println("Error: the following is an invalid device...",
+			deviceToMount)
+		return
+	}
+	finalPiece := pieces[len(pieces)-1]
+	if finalPiece == "" {
+		fmt.Println("Error: the following is an invalid device...",
+			deviceToMount)
+		return
+	}
+
 	// obtain a timestamp, this is used for drive directory name
 	datetime := time.Now().Format(time.UnixDate)
 
@@ -93,22 +108,71 @@ func main() {
 	}
 	lsblkOutput := bytes.String()
 
-	// TODO: complete this pseudo code
-	fmt.Println(lsblkOutput, datetime)
+	// if that worked, string.Split() it via "\n"
+	lines := strings.Split(lsblkOutput, "\n")
 
-	// if that worked, string.Split() it via " "; if it didn't work
-	// then exit
+	// for each line...
+	device := ""
+	majmin := ""
+	rm := ""
+	size := ""
+	ro := ""
+	Type := ""
+	mountPoint := ""
+	deviceWasNotFound := true
+	for i, line := range lines {
 
-	// check if the device in question is present; if it isn't then
-	// exit and print a helpful end message
+		// skip the column labels
+		if i == 0 {
+			continue
+		}
 
-	// ensure that the device is a partition; e.g. /dev/sdb3
-	// if not then exit
+		// combine multiple whitespace into a single one
+		columns := regexp.MustCompile("\\s+").Split(line, -1)
+		if len(columns) < 6 {
+			continue
+		}
 
-	// check if the device is already mounted; if it is, then exit and
-	// print the current directory name
+		device = columns[0]
+		majmin = columns[1]
+		rm = columns[2]
+		size = columns[3]
+		ro = columns[4]
+		Type = columns[5]
+		mountPoint = columns[6]
 
-	// attempt to obtain the size of the device; e.g. 3.4Tb
+		// ensure that the device is a partition; e.g. /dev/sdb3
+		// if not then exit
+		if Type != "part" {
+			continue
+		}
+
+		// check if the device is already mounted; if it is, then exit and
+		// print the current directory name
+		if mountPoint != "" {
+			continue
+		}
+
+		// attempt to obtain the size of the device; e.g. 3.4Tb
+		if size == "" {
+			continue
+		}
+
+		// check if the device in question is present; if it isn't then
+		// exit and print a helpful end message
+
+		// TODO: this is for debugging, delete it eventually
+		fmt.Println(device, majmin, rm, size, ro, Type, mountPoint)
+	}
+
+	if deviceWasNotFound {
+		fmt.Println("Error: the following is device is not found...",
+			deviceToMount)
+		return
+	}
+
+	// TODO: complete the below pseudo code
+	datetime = datetime
 
 	// since the device is a unmounted partition, then attempt to make
 	// a directory that combines its size and a timestamp
