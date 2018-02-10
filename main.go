@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -69,13 +70,31 @@ func main() {
 	// obtain a timestamp, this is used for drive directory name
 	datetime := time.Now().Format(time.UnixDate)
 
-	// TODO: complete this pseudo code
-	datetime = datetime
-
 	// check if the device in question is a proper directory; if that
 	// didn't work then exit
+	file, err := os.Open(deviceToMount)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	_, err = file.Stat()
+	if err != nil {
+		fmt.Println(err)
+		file.Close()
+		return
+	}
+	file.Close()
 
 	// execute `lsblk`
+	bytes, err := lsblk()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	lsblkOutput := bytes.String()
+
+	// TODO: complete this pseudo code
+	fmt.Println(lsblkOutput, datetime)
 
 	// if that worked, string.Split() it via " "; if it didn't work
 	// then exit
