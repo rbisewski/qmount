@@ -99,7 +99,7 @@ func main() {
 
 	// if no user is specified, revert to the default
 	if user == "" {
-		user = "root"
+		user = "tmp"
 	}
 
 	// obtain a timestamp, this is used for drive directory name
