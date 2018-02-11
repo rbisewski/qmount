@@ -16,11 +16,22 @@ GNU mount and has golang. The minimum requirements for this are as follows:
 Enter the following command to build the executable (if necessary as root):
 
 ```
-go build
+make
 ```
 
 Afterwards run the binary from the commandline, as you would any typical
-golang program.
+golang program. Alternatively, consider installing it, like so:
+
+```
+make install
+```
+
+At this point qmount will become installed on the system. Later, if it is
+no longer needed, it can be removed via the following command:
+
+```
+make uninstall
+```
 
 # Running qmount
 
@@ -28,7 +39,7 @@ Simply run the compiled file from the commandline and specify the device
 that you wish to mount. For example:
 
 ```
-./mnt -device /dev/sda6
+mnt -device /dev/sda6
 ```
 
 This will mount /dev/sda6 and will then return a directory of where the
