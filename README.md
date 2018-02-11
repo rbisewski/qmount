@@ -28,7 +28,7 @@ Simply run the compiled file from the commandline and specify the device
 that you wish to mount. For example:
 
 ```
-./qmount -device /dev/sda6
+./mnt -device /dev/sda6
 ```
 
 This will mount /dev/sda6 and will then return a directory of where the

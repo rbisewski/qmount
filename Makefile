@@ -18,17 +18,18 @@ endif
 all: build
 
 build: clean
-	@echo 'Building qmount...'
-	@go build -ldflags '-s -w -X main.Version='${VERSION}
+	@echo 'Building mnt...'
+	@go build -o mnt -ldflags '-s -w -X main.Version='${VERSION}
 
 clean:
 	@echo 'Cleaning...'
+	@rm mnt
 	@go clean
 
 install: build
-	@echo installing executable file to /usr/bin/qmount
-	@sudo cp qmount /usr/bin/qmount
+	@echo installing executable file to /usr/bin/mnt
+	@sudo cp mnt /usr/bin/mnt
 
 uninstall: clean
-	@echo removing executable file from /usr/bin/qmount
-	@sudo rm /usr/bin/qmount
+	@echo removing executable file from /usr/bin/mnt
+	@sudo rm /usr/bin/mnt
