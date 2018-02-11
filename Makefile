@@ -23,7 +23,7 @@ build: clean
 
 clean:
 	@echo 'Cleaning...'
-	@rm mnt
+	@rm -f mnt
 	@go clean
 
 install: build
