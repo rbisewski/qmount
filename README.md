@@ -32,7 +32,15 @@ that you wish to mount. For example:
 ```
 
 This will mount /dev/sda6 and will then return a directory of where the
-device in question was mount.
+device in question was mounted. The current timestamp will be appended to the
+directory, along with the size. Specifically, if the device is successfully
+mounted, it will display output like so:
+
+```
+/run/media/user/1_7tb_drive_1a4ilta9og8h1
+```
+
+At this point the device is mounted and is ready to be read or written to.
 
 # Additional Notes
 
