@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -33,14 +34,27 @@ var (
 
 	// default drive name
 	defaultName = "_drive_"
+
+	// default mounting location
+	defaultMount = "/run/media/"
+
+	// default user
+	user = "tmp"
+
+	// whether or not to print debug output
+	debug = false
 )
 
 // Initialize the argument input flags.
 func init() {
 
-	// Version mode flag
+	// Device flag
 	flag.StringVar(&deviceArg, "device", "",
 		"The device to be mounted; e.g. /dev/sdb3")
+
+	// User flag
+	flag.StringVar(&user, "user", "tmp",
+		"The user who has permission to the drive; e.g. root")
 
 	// Version mode flag
 	flag.BoolVar(&printVersion, "version", false,
@@ -81,6 +95,11 @@ func main() {
 		fmt.Println("Error: the following is an invalid device...",
 			deviceToMount)
 		return
+	}
+
+	// if no user is specified, revert to the default
+	if user == "" {
+		user = "root"
 	}
 
 	// obtain a timestamp, this is used for drive directory name
@@ -176,6 +195,12 @@ func main() {
 		return
 	}
 
+	// print the details of the selected device
+	if debug {
+		fmt.Println(deviceToMount, device, majmin, rm, size,
+			ro, Type, mountPoint)
+	}
+
 	// check if the device is already mounted; if it is, then exit and
 	// print the current directory name
 	if mountPoint != "" {
@@ -200,17 +225,27 @@ func main() {
 	// a directory that combines its size and a timestamp
 	directoryName := sizeString + defaultName + label
 
-	// TODO: complete the below pseudo code
-	fmt.Println(device, majmin, rm, size, ro, Type, mountPoint,
-		directoryName)
+	// create the directory path
+	path := filepath.Join(defaultMount, user, directoryName)
 
 	// if the directory creation failed, print a helpful message
+	err = os.MkdirAll(path, 0755)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// otherwise attempt to run the POSIX mount command
+	_, err = mount(deviceToMount, path)
 
 	// if the mount command failed, throw an error and exit
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// otherwise the mount was successful, so print the directory path
+	fmt.Println(path)
 
 	// everything worked fine, so return null
 	return
