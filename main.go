@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -83,7 +84,7 @@ func main() {
 	}
 
 	// obtain a timestamp, this is used for drive directory name
-	datetime := time.Now().Format(time.UnixDate)
+	datetime := time.Now().UnixNano()
 
 	// check if the device in question is a proper directory; if that
 	// didn't work then exit
@@ -147,12 +148,6 @@ func main() {
 			continue
 		}
 
-		// check if the device is already mounted; if it is, then exit and
-		// print the current directory name
-		if mountPoint != "" {
-			continue
-		}
-
 		// attempt to obtain the size of the device; e.g. 3.4Tb
 		if size == "" {
 			continue
@@ -181,12 +176,33 @@ func main() {
 		return
 	}
 
-	// TODO: complete the below pseudo code
-	fmt.Println(device, majmin, rm, size, ro, Type, mountPoint,
-		datetime)
+	// check if the device is already mounted; if it is, then exit and
+	// print the current directory name
+	if mountPoint != "" {
+		fmt.Println("Note: the device <", deviceToMount, "> is "+
+			"already mounted in the following location:\n", mountPoint)
+		return
+	}
+
+	// convert T/G/M/K to tb/gb/mb/kb
+	sizeString := strings.Replace(size, "T", "tb", -1)
+	sizeString = strings.Replace(sizeString, "G", "gb", -1)
+	sizeString = strings.Replace(sizeString, "M", "mb", -1)
+	sizeString = strings.Replace(sizeString, "K", "kb", -1)
+
+	// swap the . with a _ for the size name
+	sizeString = strings.Replace(sizeString, ".", "_", -1)
+
+	// calculate the base32 label from the datetime value
+	label := strconv.FormatInt(datetime, 32)
 
 	// since the device is a unmounted partition, then attempt to make
 	// a directory that combines its size and a timestamp
+	directoryName := sizeString + defaultName + label
+
+	// TODO: complete the below pseudo code
+	fmt.Println(device, majmin, rm, size, ro, Type, mountPoint,
+		directoryName)
 
 	// if the directory creation failed, print a helpful message
 
