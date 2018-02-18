@@ -32,4 +32,4 @@ install: build
 
 uninstall: clean
 	@echo removing executable file from /usr/bin/mnt
-	@sudo rm /usr/bin/mnt
+	@sudo rm -f /usr/bin/mnt
