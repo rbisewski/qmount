@@ -214,7 +214,7 @@ func main() {
 	sizeString = strings.Replace(sizeString, ".", "_", -1)
 
 	// calculate the base32 label from the datetime value
-	label := strconv.FormatInt(datetime, 32)
+	label := strconv.FormatInt(datetime, 36)
 
 	// since the device is a unmounted partition, then attempt to make
 	// a directory that combines its size and a timestamp

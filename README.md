@@ -48,7 +48,7 @@ directory, along with the size. Specifically, if the device is successfully
 mounted, it will display output like so:
 
 ```
-/run/media/user/1_7tb_drive_1a4ilta9og8h1
+/run/media/user/1_7tb_drive_bjgl80ssu07s
 ```
 
 At this point the device is mounted and is ready to be read or written to.
