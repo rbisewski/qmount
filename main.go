@@ -281,13 +281,13 @@ func lsblk() (bytes.Buffer, error) {
  *
  *  @return   bytes[]      array of byte buffer data
  */
-func mount(args ...string) (bytes.Buffer, error) {
+func mount(device, path string) (bytes.Buffer, error) {
 
 	// variable declaration
 	var output bytes.Buffer
 
 	// assemble the command from the list of string arguments
-	cmd := exec.Command("mount", args...)
+	cmd := exec.Command("mount", device, path)
 	cmd.Stdout = &output
 	cmd.Stderr = &output
 
