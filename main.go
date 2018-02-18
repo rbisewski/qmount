@@ -140,12 +140,7 @@ func main() {
 	Type := ""
 	mountPoint := ""
 	deviceWasNotFound := true
-	for i, line := range lines {
-
-		// skip the column labels
-		if i == 0 {
-			continue
-		}
+	for _, line := range lines {
 
 		// combine multiple whitespace into a single one
 		columns := regexp.MustCompile("\\s+").Split(line, -1)
@@ -263,7 +258,7 @@ func lsblk() (bytes.Buffer, error) {
 	var output bytes.Buffer
 
 	// assemble the command from the list of string arguments
-	cmd := exec.Command("lsblk")
+	cmd := exec.Command("lsblk", "-in")
 	cmd.Stdout = &output
 	cmd.Stderr = &output
 
