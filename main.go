@@ -231,11 +231,14 @@ func main() {
 	}
 
 	// otherwise attempt to run the POSIX mount command
-	_, err = mount(deviceToMount, path)
+	outstream, err := mount(deviceToMount, path)
 
 	// if the mount command failed, throw an error and exit
 	if err != nil {
+		fmt.Println("An error has occurred while mounting the drive:")
 		fmt.Println(err)
+		fmt.Println("The following output was thrown:")
+		fmt.Println(outstream.String())
 		return
 	}
 
