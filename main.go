@@ -121,12 +121,16 @@ func main() {
 	file.Close()
 
 	// execute `lsblk`
-	bytes, err := lsblk()
+	stdout, stderr, err := lsblk()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	lsblkOutput := bytes.String()
+	if stderr.String() != "" {
+		fmt.Println(stderr.String())
+		return
+	}
+	lsblkOutput := stdout.String()
 
 	// if that worked, string.Split() it via "\n"
 	lines := strings.Split(lsblkOutput, "\n")
@@ -253,29 +257,32 @@ func main() {
 /*
  *  @param    ...string    list of arguments
  *
- *  @return   bytes[]      array of byte buffer data
+ *  @return   bytes[]      stdout data, as bytes
+ *  @return   bytes[]      sterr data, as bytes
+ *  @return   error        message of error, if any
  */
-func lsblk() (bytes.Buffer, error) {
+func lsblk() (bytes.Buffer, bytes.Buffer, error) {
 
 	// variable declaration
-	var output bytes.Buffer
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
 
 	// assemble the command from the list of string arguments
 	cmd := exec.Command("lsblk", "-in")
-	cmd.Stdout = &output
-	cmd.Stderr = &output
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
 
 	// attempt to execute the command
 	err := cmd.Run()
 
 	// if an error occurred, go ahead and pass it back
 	if err != nil {
-		return output, err
+		return stdout, stderr, err
 	}
 
 	// having ran the command, pass back the result if no error has
 	// occurred
-	return output, nil
+	return stdout, stderr, nil
 }
 
 //! Attempt to execute the mount command.
