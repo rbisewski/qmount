@@ -194,7 +194,7 @@ func main() {
 		return
 	}
 
-	// print the details of the selected device
+	// if debug, print the details of the selected device
 	if debug {
 		fmt.Println(deviceToMount, device, majmin, rm, size,
 			ro, Type, mountPoint)
@@ -208,11 +208,12 @@ func main() {
 		return
 	}
 
-	// convert T/G/M/K to tb/gb/mb/kb
+	// convert T/G/M/K/B to tb/gb/mb/kb/b
 	sizeString := strings.Replace(size, "T", "tb", -1)
 	sizeString = strings.Replace(sizeString, "G", "gb", -1)
 	sizeString = strings.Replace(sizeString, "M", "mb", -1)
 	sizeString = strings.Replace(sizeString, "K", "kb", -1)
+	sizeString = strings.Replace(sizeString, "B", "b", -1)
 
 	// swap the . with a _ for the size name
 	sizeString = strings.Replace(sizeString, ".", "_", -1)
@@ -223,6 +224,11 @@ func main() {
 	// since the device is a unmounted partition, then attempt to make
 	// a directory that combines its size and a timestamp
 	directoryName := sizeString + defaultName + label
+
+	// if debug, print directory name
+	if debug {
+		fmt.Println("Expected directory name is: " + directoryName)
+	}
 
 	// create the directory path
 	path := filepath.Join(defaultMount, user, directoryName)
