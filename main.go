@@ -105,21 +105,6 @@ func main() {
 	// obtain a timestamp, this is used for drive directory name
 	datetime := time.Now().UnixNano()
 
-	// check if the device in question is a proper directory; if that
-	// didn't work then exit
-	file, err := os.Open(deviceToMount)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	_, err = file.Stat()
-	if err != nil {
-		fmt.Println(err)
-		file.Close()
-		return
-	}
-	file.Close()
-
 	// execute `lsblk`
 	stdout, stderr, err := lsblk()
 	if err != nil {
@@ -245,10 +230,9 @@ func main() {
 
 	// if the mount command failed, throw an error and exit
 	if err != nil {
-		fmt.Println("An error has occurred while mounting the drive:")
-		fmt.Println(err)
-		fmt.Println("The following output was thrown:")
-		fmt.Println(outstream.String())
+		fmt.Println("An error occurred while mounting the drive:\n",
+			err, "\nThe following output was thrown:\n",
+			outstream.String())
 		return
 	}
 
