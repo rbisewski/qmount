@@ -20,7 +20,7 @@ func lsblk() (bytes.Buffer, bytes.Buffer, error) {
 	var stderr bytes.Buffer
 
 	// assemble the command from the list of string arguments
-	cmd := exec.Command("lsblk", "-iln")
+	cmd := exec.Command("lsblk", "-inr")
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
