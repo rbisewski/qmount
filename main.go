@@ -113,7 +113,12 @@ func main() {
 		fmt.Println(stderr.String())
 		return
 	}
+
 	lsblkOutput := stdout.String()
+	if lsblkOutput == "" {
+		fmt.Println("Note: No output received from lsblk.")
+		return
+	}
 
 	// if that worked, string.Split() it via "\n"
 	lines := strings.Split(lsblkOutput, "\n")
