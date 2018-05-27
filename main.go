@@ -197,7 +197,7 @@ func main() {
 	}
 
 	// convert P/T/G/M/K/B to pb/tb/gb/mb/kb/b
-	sizeString := strings.Replace(size, "P", "tb", -1)
+	sizeString := strings.Replace(size, "P", "pb", -1)
 	sizeString = strings.Replace(size, "T", "tb", -1)
 	sizeString = strings.Replace(sizeString, "G", "gb", -1)
 	sizeString = strings.Replace(sizeString, "M", "mb", -1)
