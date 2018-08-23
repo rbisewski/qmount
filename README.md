@@ -35,15 +35,21 @@ make uninstall
 
 # Running qmount
 
-Simply run the compiled file from the commandline and specify the device
-that you wish to mount. For example:
+To quickly mount a device, simply run this via the commandline like so:
 
 ```
-mnt -device /dev/sda6
+mnt /dev/sda6
 ```
 
-This will mount /dev/sda6 and will then return a directory of where the
-device in question was mounted. The current timestamp will be appended to the
+Alternatively you may precisely specify the hardware device that you wish
+to mount and the user if desired. For example:
+
+```
+mnt -device /dev/sda6 -user root
+```
+
+This will mount /dev/sda6 and will then print the path of where the device
+in question was mounted. The current timestamp will be appended to the
 directory, along with the size. Specifically, if the device is successfully
 mounted, it will display output like so:
 
@@ -56,4 +62,4 @@ At this point the device is mounted and is ready to be read or written to.
 # Additional Notes
 
 If a given device is already mounted, the program will simply return the
-current mount path of the device.
+current mounted path of the device.

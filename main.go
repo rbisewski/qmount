@@ -74,8 +74,30 @@ func main() {
 		return
 	}
 
-	// quit the program if the device argument is blank
+	// quit the program if the arguments are empty
+	arguments := os.Args
+	if len(arguments) < 2 {
+		flag.Usage()
+		return
+	}
+
 	deviceToMount := strings.TrimSpace(deviceArg)
+
+	//
+	// if the program is given exactly two arguments, assume that they
+	// are utilizing the program in the following fashion:
+	//
+	// mnt /dev/sdb4
+	//
+	if deviceToMount == "" &&
+		len(arguments) == 2 &&
+		len(arguments[1]) > 1 &&
+		strings.HasPrefix(arguments[1], "/") {
+
+		deviceToMount = arguments[1]
+	}
+
+	// quit the program if the device argument is blank
 	if deviceToMount == "" {
 		flag.Usage()
 		return
